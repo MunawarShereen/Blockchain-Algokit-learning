@@ -1,0 +1,197 @@
+#pragma version 10
+#pragma typetrack false
+
+// algopy.arc4.ARC4Contract.approval_program() -> uint64:
+main:
+    intcblock 1
+    bytecblock 0x151f7c75
+    // smart_contracts/contracts/contract.py:4-5
+    // # ARC4Contract hamay batata hai ka ye avm k standard ko follow karraha hai ya nahi
+    // class Contracts(ARC4Contract):
+    txn NumAppArgs
+    bz main_bare_routing@9
+    pushbytess 0x0f0c7a3d 0xfe6bdf69 0x49776b70 0x766083a7 // method "hello_world(string)string", method "add(uint64,uint64)uint64", method "subtract(uint64,uint64)uint64", method "multiply(uint64,uint64)uint64"
+    txna ApplicationArgs 0
+    match main_hello_world_route@3 main_add_route@4 main_subtract_route@5 main_multiply_route@6
+
+main_after_if_else@13:
+    // smart_contracts/contracts/contract.py:4-5
+    // # ARC4Contract hamay batata hai ka ye avm k standard ko follow karraha hai ya nahi
+    // class Contracts(ARC4Contract):
+    pushint 0 // 0
+    return
+
+main_multiply_route@6:
+    // smart_contracts/contracts/contract.py:18
+    // @abimethod()
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    // smart_contracts/contracts/contract.py:4-5
+    // # ARC4Contract hamay batata hai ka ye avm k standard ko follow karraha hai ya nahi
+    // class Contracts(ARC4Contract):
+    txna ApplicationArgs 1
+    btoi
+    txna ApplicationArgs 2
+    btoi
+    // smart_contracts/contracts/contract.py:18
+    // @abimethod()
+    callsub multiply
+    itob
+    bytec_0 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_0 // 1
+    return
+
+main_subtract_route@5:
+    // smart_contracts/contracts/contract.py:14
+    // @abimethod()
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    // smart_contracts/contracts/contract.py:4-5
+    // # ARC4Contract hamay batata hai ka ye avm k standard ko follow karraha hai ya nahi
+    // class Contracts(ARC4Contract):
+    txna ApplicationArgs 1
+    btoi
+    txna ApplicationArgs 2
+    btoi
+    // smart_contracts/contracts/contract.py:14
+    // @abimethod()
+    callsub subtract
+    itob
+    bytec_0 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_0 // 1
+    return
+
+main_add_route@4:
+    // smart_contracts/contracts/contract.py:10
+    // @abimethod()
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    // smart_contracts/contracts/contract.py:4-5
+    // # ARC4Contract hamay batata hai ka ye avm k standard ko follow karraha hai ya nahi
+    // class Contracts(ARC4Contract):
+    txna ApplicationArgs 1
+    btoi
+    txna ApplicationArgs 2
+    btoi
+    // smart_contracts/contracts/contract.py:10
+    // @abimethod()
+    callsub add
+    itob
+    bytec_0 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_0 // 1
+    return
+
+main_hello_world_route@3:
+    // smart_contracts/contracts/contract.py:6
+    // @abimethod(name="hello_world")
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    // smart_contracts/contracts/contract.py:4-5
+    // # ARC4Contract hamay batata hai ka ye avm k standard ko follow karraha hai ya nahi
+    // class Contracts(ARC4Contract):
+    txna ApplicationArgs 1
+    extract 2 0
+    // smart_contracts/contracts/contract.py:6
+    // @abimethod(name="hello_world")
+    callsub hello
+    dup
+    len
+    itob
+    extract 6 2
+    swap
+    concat
+    bytec_0 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_0 // 1
+    return
+
+main_bare_routing@9:
+    // smart_contracts/contracts/contract.py:4-5
+    // # ARC4Contract hamay batata hai ka ye avm k standard ko follow karraha hai ya nahi
+    // class Contracts(ARC4Contract):
+    txn OnCompletion
+    bnz main_after_if_else@13
+    txn ApplicationID
+    !
+    assert // can only call when creating
+    intc_0 // 1
+    return
+
+
+// smart_contracts.contracts.contract.Contracts.hello(name: bytes) -> bytes:
+hello:
+    // smart_contracts/contracts/contract.py:6-7
+    // @abimethod(name="hello_world")
+    // def hello(self, name: String) -> String:
+    proto 1 1
+    // smart_contracts/contracts/contract.py:8
+    // return "Hello, " + name
+    pushbytes "Hello, "
+    frame_dig -1
+    concat
+    retsub
+
+
+// smart_contracts.contracts.contract.Contracts.add(a: uint64, b: uint64) -> uint64:
+add:
+    // smart_contracts/contracts/contract.py:10-11
+    // @abimethod()
+    // def add(self, a: UInt64, b: UInt64) -> UInt64:
+    proto 2 1
+    // smart_contracts/contracts/contract.py:12
+    // return a + b
+    frame_dig -2
+    frame_dig -1
+    +
+    retsub
+
+
+// smart_contracts.contracts.contract.Contracts.subtract(a: uint64, b: uint64) -> uint64:
+subtract:
+    // smart_contracts/contracts/contract.py:14-15
+    // @abimethod()
+    // def subtract(self, a : UInt64 , b:UInt64 ) -> UInt64:
+    proto 2 1
+    // smart_contracts/contracts/contract.py:16
+    // return a-b
+    frame_dig -2
+    frame_dig -1
+    -
+    retsub
+
+
+// smart_contracts.contracts.contract.Contracts.multiply(a: uint64, b: uint64) -> uint64:
+multiply:
+    // smart_contracts/contracts/contract.py:18-19
+    // @abimethod()
+    // def multiply(self, a:UInt64 , b: UInt64) -> UInt64:
+    proto 2 1
+    // smart_contracts/contracts/contract.py:20
+    // return a*b
+    frame_dig -2
+    frame_dig -1
+    *
+    retsub
