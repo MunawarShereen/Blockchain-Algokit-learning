@@ -1,7 +1,7 @@
 from algopy import ARC4Contract, String, UInt64
 from algopy.arc4 import abimethod
 
-# ARC4Contract hamay batata hai ka ye avm k standard ko follow karraha hai ya nahi
+
 class Contracts(ARC4Contract):
     @abimethod(name="hello_world")
     def hello(self, name: String) -> String:
